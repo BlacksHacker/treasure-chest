@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <jdk15on.version>1.60</jdk15on.version>
+        <common.version>2.6</common.version>
     </properties>
 
     <dependencies>
@@ -30,6 +32,22 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.9</version>
         </dependency>
+
+        <!--RSA，提供哈希算法和加密算法的第三方库-->
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${jdk15on.version}</version>
+        </dependency>
+
+        <!--other-->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
