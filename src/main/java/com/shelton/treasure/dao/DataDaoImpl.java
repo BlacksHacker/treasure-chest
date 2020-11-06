@@ -1,6 +1,7 @@
 package com.shelton.treasure.dao;
 
 import com.shelton.treasure.dto.DataDto;
+import com.shelton.treasure.dto.DataParamDto;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -29,7 +30,7 @@ public class DataDaoImpl implements DataDao {
     }
 
     @Override
-    public List<DataDto> getDataList(DataDto dataDto) {
+    public List<DataDto> getDataList(DataParamDto dataParamDto) {
         SqlSession sqlSession = sqlSessionFactory.openSession(false);
         try {
             return sqlSession.selectList("com.tcl.user.account.idcenter.core.segment.dao.IDAllocMapper.getAllLeafAllocs");

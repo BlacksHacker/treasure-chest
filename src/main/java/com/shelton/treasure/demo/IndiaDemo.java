@@ -1,5 +1,6 @@
 package com.shelton.treasure.demo;
 
+import com.sun.org.apache.bcel.internal.ExceptionConst;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -7,10 +8,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * @ClassName ExcelReadUtis
@@ -19,7 +17,14 @@ import java.io.InputStream;
  **/
 public class IndiaDemo {
 
-    public static void excel2007Reader(String filePath){
+    public static void excel2007Reader(String filePath, String outPath)throws Exception {
+        File file = new File(outPath);
+        if (file.exists()){
+            file.delete();
+        }
+        FileOutputStream out = new FileOutputStream(outPath);
+        StringBuilder builder = new StringBuilder();
+
         File excelFile = null;
         InputStream is = null;
         excelFile = new File(filePath);
@@ -38,7 +43,7 @@ public class IndiaDemo {
             if (row == null) {
                 continue;
             }
-            for (int j = 0; j < row.getLastCellNum(); j++){
+            for (int j = 1; j < row.getLastCellNum(); j++){
                 Cell cell = row.getCell(j);
                 if (cell == null) {
                     cellStr = "";
@@ -49,21 +54,24 @@ public class IndiaDemo {
                 } else {
                     cellStr = cell.getStringCellValue();
                 }
-                if (cellStr.length() == 10){
-                    count++;
-                    if (count >= 40000 && count < 50000){
-                        System.out.println("update user_login_info set clientId = '19274432' where loginname = '+91"+ cellStr +"';");
-                    }
 
-                }
+                    builder.append("update user_login_info set clientId = '19274432' where loginname = '+84"+cellStr+"';\n");
 
             }
         }
+        byte[] data = builder.toString().getBytes();
+        out.write(data);
+        out.close();
         System.out.println(count);
     }
 
     public static void main(String[] args) {
-        String path = "D:\\file\\temp\\india.xlsx";
-        excel2007Reader(path);
+        String path = "D:\\file\\temp\\yuenanall.xlsx";
+        String outPath = "D:\\file\\temp\\yuenan.sql";
+        try {
+            excel2007Reader(path , outPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
