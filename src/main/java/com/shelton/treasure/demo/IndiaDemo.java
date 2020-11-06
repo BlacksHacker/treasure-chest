@@ -1,8 +1,5 @@
 package com.shelton.treasure.demo;
 
-import com.alibaba.fastjson.JSONObject;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,17 +11,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
- * @ClassName Country
+ * @ClassName ExcelReadUtis
  * @Description TODO
  * @Author xiaosheng1.li
  **/
-public class CountryInfoDemo {
+public class IndiaDemo {
 
     public static void excel2007Reader(String filePath){
         File excelFile = null;
@@ -32,23 +25,20 @@ public class CountryInfoDemo {
         excelFile = new File(filePath);
         String cellStr = "";
         Workbook workbook2007 = null;
-        List<String> tagList = new ArrayList<>();
-        Map<String, JSONObject> map = new HashMap<>();
         try {
             is = new FileInputStream(excelFile);
             workbook2007 = new XSSFWorkbook(is);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        int count = 0;
         Sheet sheet = workbook2007.getSheetAt(0);
-        for (int i = 0; i <= sheet.getLastRowNum(); i++){
-            System.out.println(sheet.getLastRowNum());
-            System.out.println(sheet.getRow(sheet.getLastRowNum()).getCell(1).getStringCellValue());
+        for (int i = 1; i < sheet.getLastRowNum(); i++){
             Row row = sheet.getRow(i);
             if (row == null) {
                 continue;
             }
-            for (int j =0; j < row.getLastCellNum(); j++){
+            for (int j = 0; j < row.getLastCellNum(); j++){
                 Cell cell = row.getCell(j);
                 if (cell == null) {
                     cellStr = "";
@@ -59,29 +49,21 @@ public class CountryInfoDemo {
                 } else {
                     cellStr = cell.getStringCellValue();
                 }
-                if ( i == 0 && j >= 4){
-                    tagList.add(cellStr);
-                }
+                if (cellStr.length() == 10){
+                    count++;
+                    if (count >= 40000 && count < 50000){
+                        System.out.println("update user_login_info set clientId = '19274432' where loginname = '+91"+ cellStr +"';");
+                    }
 
-                if (i >= 2){
-                    if (j == 1){
-                        map.put(cellStr, new JSONObject());
-                    }
-                    if (j >= 4){
-                        JSONObject obj = map.get(row.getCell(1).getStringCellValue());
-                        obj.put(tagList.get(j-4), cellStr);
-                    }
                 }
 
             }
         }
-        for (Map.Entry<String, JSONObject> entry: map.entrySet()){
-            System.out.println("update country set language = '"+entry.getValue()+"' where abbr = '"+entry.getKey()+"';");
-        }
-
+        System.out.println(count);
     }
 
     public static void main(String[] args) {
-        excel2007Reader("D:\\file\\temp\\Country info.xlsx");
+        String path = "D:\\file\\temp\\india.xlsx";
+        excel2007Reader(path);
     }
 }
